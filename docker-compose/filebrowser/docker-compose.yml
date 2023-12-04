@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    user: "501:20"
+    ports:
+      - 8081:8080
+    volumes:
+      - /Users/lukepurnell/subbox/docker-compose/filebrowser/data:/data
+      - /Users/lukepurnell/subbox/docker-compose/filebrowser/config:/config
+    #environment:
+      #- FB_BASEURL=/filebrowser
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

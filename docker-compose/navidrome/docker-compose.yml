@@ -1,0 +1,24 @@
+version: '3.4'
+services:
+  navidrome:
+    image: navidrome:latest
+    restart: unless-stopped
+    container_name: "${NAME}"
+    user: "501:20"
+    ports:
+      - "${SUBBOXPORT}:4533"
+    environment:
+      #ND_SCANSCHEDULE: 1
+      ND_LOGLEVEL: debug
+      ND_SESSIONTIMEOUT: 24h
+      # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
+      #ND_BASEURL: /navidrome
+    volumes:
+      - "/Users/lukepurnell/subbox/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/Users/lukepurnell/subbox/${SUBBOXUSERNAME}/nav_music:/music:ro"
+    networks:
+      - subbox-bridge
+networks:
+  subbox-bridge:
+    external: true
+    name: subbox-bridge

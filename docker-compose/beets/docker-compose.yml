@@ -1,0 +1,23 @@
+---
+version: "2.1"
+services:
+  beets:
+    image: lscr.io/linuxserver/beets:latest
+    container_name: ${NAME}
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/nav_music:/music
+      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/beets/download:/downloads
+    ports:
+      - ${SUBBOXPORT}:8337
+    restart: unless-stopped
+    networks:
+      - subbox-bridge
+networks:
+  subbox-bridge:
+    external: true
+    name: subbox-bridge
