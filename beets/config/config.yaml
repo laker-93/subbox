@@ -1,4 +1,4 @@
-plugins: web fetchart lyrics lastgenre
+plugins: web fetchart lyrics lastgenre embedart
 directory: /music
 library: /config/musiclibrary.blb
 art_filename: albumart
@@ -73,7 +73,6 @@ scrub:
 replace:
     '^\.': _
     '[\x00-\x1f]': _
-    '[<>:"\?\*\|]': _
     '[\xE8-\xEB]': e
     '[\xEC-\xEF]': i
     '[\xE2-\xE6]': a
