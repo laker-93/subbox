@@ -8,8 +8,8 @@ services:
     ports:
       - 8081:8080
     volumes:
-      - /Users/lukepurnell/subbox/docker-compose/filebrowser/data:/data
-      - /Users/lukepurnell/subbox/docker-compose/filebrowser/config:/config
+      - /Users/lajp/subbox/docker-compose/filebrowser/data:/data
+      - /Users/lajp/subbox/docker-compose/filebrowser/config:/config
     #environment:
       #- FB_BASEURL=/filebrowser
     restart: unless-stopped

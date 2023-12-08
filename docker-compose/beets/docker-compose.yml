@@ -9,15 +9,15 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/beets/config:/config
-      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/nav_music:/music
-      - /Users/lukepurnell/subbox/${SUBBOXUSERNAME}/beets/download:/downloads
+      - /Users/lajp/subbox/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lajp/subbox/${SUBBOXUSERNAME}/nav_music:/music
+      - /Users/lajp/subbox/${SUBBOXUSERNAME}/beets/download:/downloads
     ports:
       - ${SUBBOXPORT}:8337
     restart: unless-stopped
     networks:
-      - subbox-bridge
+      - traefik_default
 networks:
-  subbox-bridge:
+  traefik_default:
     external: true
-    name: subbox-bridge
+    name: traefik_default
