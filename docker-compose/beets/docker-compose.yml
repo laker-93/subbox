@@ -1,7 +1,7 @@
 ---
-version: "2.1"
+version: "3"
 services:
-  beets:
+  beetslajp:
     image: lscr.io/linuxserver/beets:latest
     container_name: ${NAME}
     environment:
@@ -9,15 +9,33 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /Users/lajp/subbox/${SUBBOXUSERNAME}/beets/config:/config
-      - /Users/lajp/subbox/${SUBBOXUSERNAME}/nav_music:/music
-      - /Users/lajp/subbox/${SUBBOXUSERNAME}/beets/download:/downloads
+      - /Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
+      - type: volume
+        source: private-sorted
+        target: /music
+        volume:
+          nocopy: true
+          subpath: ${SUBBOXUSERNAME}
+      - type: volume
+        source: private-staged
+        target: /downloads
+        volume:
+          nocopy: true
+          subpath: ${SUBBOXUSERNAME}
     ports:
       - ${SUBBOXPORT}:8337
     restart: unless-stopped
-    networks:
-      - traefik_default
-networks:
-  traefik_default:
+#    networks:
+#      - traefik_default
+#networks:
+#  traefik_default:
+#    external: true
+#    name: traefik_default
+
+volumes:
+  private-staged:
     external: true
-    name: traefik_default
+    name: private-staged
+  private-sorted:
+    external: true
+    name: private-sorted
