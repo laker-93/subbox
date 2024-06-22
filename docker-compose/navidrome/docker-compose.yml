@@ -16,26 +16,25 @@ services:
     volumes:
       - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
       - type: volume
-        source: private-sorted
+        source: private-music
         target: /music/private
         read_only: true
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-#      - "public-music:/music/public:ro"
+      - "public-music:/music/public:ro"
+    networks:
+      - traefik_default
 
 volumes:
-#  public-music:
-#    external: true
-  private-sorted:
+  public-music:
     external: true
-    name: private-sorted
+  private-music:
+    external: true
+    name: private-music
 
-#    networks:
-#      - traefik_default
 
-#networks:
-#  # only needed when deploying with pymix as a docker container.
-#  traefik_default:
-#    external: true
-#    name: traefik_default
+networks:
+  traefik_default:
+    external: true
+    name: traefik_default
