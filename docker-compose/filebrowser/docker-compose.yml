@@ -4,14 +4,19 @@ services:
   filebrowser:
     image: hurlenko/filebrowser
     container_name: filebrowser
-    user: "501:20"
+    user: root
     ports:
       - 8081:8080
     volumes:
-      - /Users/lajp/subbox/docker-compose/filebrowser/data:/data
-      - /Users/lajp/subbox/docker-compose/filebrowser/config:/config
+      - user-updownloads:/data/users:z
+      - /Users/lukepurnell/workspace/subbox/docker-compose/filebrowser/config:/config
     #environment:
       #- FB_BASEURL=/filebrowser
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+
+volumes:
+  user-updownloads:
+    driver: local
+    name: user-updownloads

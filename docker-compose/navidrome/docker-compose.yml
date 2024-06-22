@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   navidrome:
-    image: laker93/neodrome:latest
+    image: neodrome:latest
     restart: unless-stopped
     container_name: "${NAME}"
     user: "501:20"
@@ -14,10 +14,26 @@ services:
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       #ND_BASEURL: /navidrome
     volumes:
-      - "/Users/lajp/subbox/${SUBBOXUSERNAME}/navidrome/data:/data"
-      - "/Users/lajp/subbox/${SUBBOXUSERNAME}/nav_music:/music:ro"
+      - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - type: volume
+        source: private-music
+        target: /music/private
+        read_only: true
+        volume:
+          nocopy: true
+          subpath: ${SUBBOXUSERNAME}
+      - "public-music:/music/public:ro"
     networks:
       - traefik_default
+
+volumes:
+  public-music:
+    external: true
+  private-music:
+    external: true
+    name: private-music
+
+
 networks:
   traefik_default:
     external: true
