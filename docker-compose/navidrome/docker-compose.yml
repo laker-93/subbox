@@ -12,12 +12,19 @@ services:
       ND_LOGLEVEL: debug
       ND_SESSIONTIMEOUT: 24h
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
-      #ND_BASEURL: /navidrome
+      ND_BASEURL: /${NAME}
     volumes:
       - "/Users/lajp/subbox/${SUBBOXUSERNAME}/navidrome/data:/data"
       - "/Users/lajp/subbox/${SUBBOXUSERNAME}/nav_music:/music:ro"
     networks:
       - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${NAME}.rule=Host(`sub-box.net`) || PathPrefix(`/${NAME}`)"
+
+      - "traefik.http.services.${NAME}.loadbalancer.server.port=4533"
+      - "traefik.http.routers.${NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${NAME}.tls.certresolver=le"
 networks:
   traefik_default:
     external: true
