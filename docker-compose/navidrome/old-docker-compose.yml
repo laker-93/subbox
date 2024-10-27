@@ -14,15 +14,8 @@ services:
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       ND_BASEURL: /${NAME}
     volumes:
-      - "/Users/lajp/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
-      - type: volume
-        source: private-music
-        target: /music/private
-        read_only: true
-        volume:
-          nocopy: true
-          subpath: ${SUBBOXUSERNAME}
-      - "public-music:/music/public:ro"
+      - "/Users/lajp/subbox/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/Users/lajp/subbox/${SUBBOXUSERNAME}/nav_music:/music:ro"
     networks:
       - traefik_default
     labels:
@@ -32,21 +25,6 @@ services:
       - "traefik.http.services.${NAME}.loadbalancer.server.port=4533"
       - "traefik.http.routers.${NAME}.entrypoints=websecure"
       - "traefik.http.routers.${NAME}.tls.certresolver=le"
-      - "traefik.http.routers.${NAME}.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
-
-volumes:
-  public-music:
-    external: true
-  private-music:
-    external: true
-    name: private-music
-
-
 networks:
   traefik_default:
     external: true

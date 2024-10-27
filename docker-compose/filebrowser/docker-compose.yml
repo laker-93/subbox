@@ -9,7 +9,7 @@ services:
       - 8081:8080
     volumes:
       - user-updownloads:/data/users:z
-      - /Users/lukepurnell/workspace/subbox/docker-compose/filebrowser/config:/config
+      - /Users/lajp/subbox/docker-compose/filebrowser/config:/config
     #environment:
       #- FB_BASEURL=/filebrowser
     restart: unless-stopped

@@ -10,7 +10,7 @@ services:
       - PGID=0
       - TZ=Etc/UTC
     volumes:
-      - /Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lajp/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
       - type: volume
         source: private-music
         target: /music
