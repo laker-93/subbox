@@ -1,7 +1,7 @@
 version: '3.4'
 services:
-  navidrome:
-    image: neodrome:latest
+  navidromelajp:
+    image: laker93/neodrome:latest
     restart: unless-stopped
     container_name: "${NAME}"
     user: "501:20"
@@ -13,22 +13,21 @@ services:
       ND_SESSIONTIMEOUT: 24h
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       #ND_BASEURL: /navidrome
+      ND_CONFIGFILE: /data/navidrome.toml
     volumes:
       - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data/navidrome.toml:/data/navidrome.toml"
       - type: volume
         source: private-music
-        target: /music/private
+        target: /music
         read_only: true
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-      - "public-music:/music/public:ro"
     networks:
       - traefik_default
 
 volumes:
-  public-music:
-    external: true
   private-music:
     external: true
     name: private-music

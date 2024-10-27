@@ -1,7 +1,7 @@
 ---
 version: "3"
 services:
-  beets:
+  beetslajp:
     image: lscr.io/linuxserver/beets:latest
     container_name: ${NAME}
     user: root
@@ -11,18 +11,19 @@ services:
       - TZ=Etc/UTC
     volumes:
       - /Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lukepurnell/workspace/subbox/lajp/beets_import:/downloads
       - type: volume
         source: private-music
         target: /music
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-      - type: volume
-        source: private-staged
-        target: /downloads
-        volume:
-          nocopy: true
-          subpath: ${SUBBOXUSERNAME}
+      #- type: volume
+      #  source: private-staged
+      #  target: /downloads
+      #  volume:
+      #    nocopy: true
+      #    subpath: ${SUBBOXUSERNAME}
     ports:
       - ${SUBBOXPORT}:8337
     restart: unless-stopped
