@@ -1,10 +1,10 @@
 version: '3.4'
 services:
   navidrome:
-    image: neodrome:latest
+    image: deluan/navidrome:0.60.3
     restart: unless-stopped
     container_name: "${NAME}"
-    user: "501:20"
+    user: "1000:1000"
     ports:
       - "${SUBBOXPORT}:4533"
     environment:
@@ -14,7 +14,7 @@ services:
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       #ND_BASEURL: /navidrome
     volumes:
-      - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/home/deploy/subbox/users/${SUBBOXUSERNAME}/navidrome/data:/data"
       - type: volume
         source: private-music
         target: /music/private
@@ -22,13 +22,25 @@ services:
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-      - "public-music:/music/public:ro"
+            #- "public-music:/music/public:ro"
     networks:
       - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${NAME}.rule=Host(`${NAME}.sub-box.net`)"
+      - "traefik.http.services.${NAME}.loadbalancer.server.port=4533"
+      - "traefik.http.routers.${NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${NAME}.tls.certresolver=le"
+      - "traefik.http.routers.${NAME}.middlewares=cors"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
 
 volumes:
-  public-music:
-    external: true
+  #public-music:
+  #  external: true
   private-music:
     external: true
     name: private-music
