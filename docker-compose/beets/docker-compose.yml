@@ -4,10 +4,10 @@ services:
   beets:
     image: lscr.io/linuxserver/beets:latest
     container_name: ${NAME}
-    user: root
+    #user: root
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=501
+      - PGID=20
       - TZ=Etc/UTC
     volumes:
       - /Users/lajp/subbox/private/${SUBBOXUSERNAME}/beets/config:/config

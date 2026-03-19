@@ -1,28 +1,43 @@
-version: '3.4'
 services:
   navidrome:
-    image: laker93/neodrome:latest
+    image: deluan/navidrome:latest
+    #image: laker93/neodrome:v1.2.11
     restart: unless-stopped
     container_name: "${NAME}"
     user: "501:20"
     ports:
       - "${SUBBOXPORT}:4533"
     environment:
-      #ND_SCANSCHEDULE: 1
+      ND_SCANSCHEDULE: 0
       ND_LOGLEVEL: debug
       ND_SESSIONTIMEOUT: 24h
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       ND_BASEURL: /${NAME}
+      # improve performance by using the same artwork for each track in an album
+      ND_ENABLEINSIGHTCOLLECTOR: false
+      ND_SUBSONIC_DEFAULTREPORTREALPATH: true
+      ND_ENABLEMEDIAFILECOVERART: false
+      ND_COVERARTPRIORITY: "embedded"
+      ND_BACKUP_PATH: /backup/navidrome/${SUBBOXUSERNAME}
+      ND_BACKUP_SCHEDULE: 0 * * * *
+      ND_BACKUP_COUNT: 3
     volumes:
       - "/Users/lajp/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
       - type: volume
         source: private-music
         target: /music/private
-        read_only: true
+        read_only: false
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-      - "public-music:/music/public:ro"
+      - type: volume
+        source: private-music
+        target: /backup
+        read_only: false
+        volume:
+          nocopy: true
+          subpath: backup/${SUBBOXUSERNAME}
+      #- "public-music:/music/public:ro"
     networks:
       - traefik_default
     labels:
@@ -40,8 +55,8 @@ services:
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
 
 volumes:
-  public-music:
-    external: true
+  #public-music:
+  #  external: true
   private-music:
     external: true
     name: private-music
