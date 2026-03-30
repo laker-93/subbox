@@ -1,20 +1,23 @@
-version: '3.4'
 services:
   navidrome:
-    image: laker93/neodrome:latest
+    privileged: false
+    image: deluan/navidrome:0.60.3
     restart: unless-stopped
     container_name: "${NAME}"
-    user: "501:20"
+    group_add:
+      - "20"
     ports:
       - "${SUBBOXPORT}:4533"
     environment:
-      #ND_SCANSCHEDULE: 1
+      ND_SCANSCHEDULE: 0
       ND_LOGLEVEL: debug
       ND_SESSIONTIMEOUT: 24h
+      ND_ENABLEINSIGHTSCOLLECTOR: false
+      ND_SUBSONIC_DEFAULTREPORTREALPATH: true
+      ND_COVERARTPRIORITY: "embedded"
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
-      ND_BASEURL: /${NAME}
     volumes:
-      - "/Users/lajp/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
       - type: volume
         source: private-music
         target: /music/private
@@ -22,32 +25,34 @@ services:
         volume:
           nocopy: true
           subpath: ${SUBBOXUSERNAME}
-      - "public-music:/music/public:ro"
+      #- "public-music:/music/public:ro"
     networks:
-      - traefik_default
+      #- traefik_default
+      - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${NAME}.rule=Host(`sub-box.net`) || PathPrefix(`/${NAME}`)"
-
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.${NAME}.rule=Host(`${NAME}.docker.localhost`)"
       - "traefik.http.services.${NAME}.loadbalancer.server.port=4533"
-      - "traefik.http.routers.${NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${NAME}.tls.certresolver=le"
-      - "traefik.http.routers.${NAME}.middlewares=cors"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+      - "traefik.http.routers.${NAME}.tls=true"
+      - "traefik.http.routers.${NAME}.middlewares=navcors"
+      - "traefik.http.middlewares.navcors.headers.accesscontrolallowmethods=*"
+      - "traefik.http.middlewares.navcors.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.navcors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.navcors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.navcors.headers.addvaryheader=true"
 
 volumes:
-  public-music:
-    external: true
+  #public-music:
+  #  external: true
   private-music:
     external: true
     name: private-music
 
 
 networks:
-  traefik_default:
+  proxy:
     external: true
-    name: traefik_default
+  #traefik_default:
+  #  external: true
+  #  name: traefik_default

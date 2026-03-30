@@ -1,16 +1,16 @@
 ---
-version: "3"
 services:
   beets:
+    privileged: false
     image: lscr.io/linuxserver/beets:latest
     container_name: ${NAME}
-    user: root
+    user: "501:20"
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=501
+      - PGID=20
       - TZ=Etc/UTC
     volumes:
-      - /Users/lajp/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/beets/config:/config
       - type: volume
         source: private-music
         target: /music
@@ -27,11 +27,14 @@ services:
       - ${SUBBOXPORT}:8337
     restart: unless-stopped
     networks:
-      - traefik_default
+      #- traefik_default
+      - proxy
 networks:
-  traefik_default:
+  #traefik_default:
+  #  external: true
+  #  name: traefik_default
+  proxy:
     external: true
-    name: traefik_default
 
 volumes:
   private-staged:

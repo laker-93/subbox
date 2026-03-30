@@ -1,4 +1,4 @@
-plugins: web fetchart lyrics lastgenre embedart
+plugins: web fetchart lyrics lastgenre embedart duplicates info subsonicupdate
 directory: /music
 library: /config/musiclibrary.blb
 art_filename: albumart
@@ -29,9 +29,9 @@ match:
     missing_tracks: 0
 
 paths:
-    default: $albumartist/$album%aunique{}/$track - $title
+    default: $albumartist/$album/$track - $title
     singleton: Non-Album/$artist - $title
-    comp: Compilations/$album%aunique{}/$track - $title
+    comp: Compilations/$album/$track - $title
     albumtype_soundtrack: Soundtracks/$album/$track $title 
         
 import:
@@ -43,13 +43,8 @@ import:
     resume: ask
     incremental: no
     incremental_skip_later: no
-    # if duplicates found then merge them in. This can happen
-    # if tracks for a compilation are split over multiple
-    # directories. Then each time beets tries to import one of
-    # the directories it will think that it is importing a
-    # duplicate compilation album. This is acceptable since the
-    # tracks should be distinct so we just ask beets to merge.
-    duplicate_action: merge 
+    # keep and defer to the duplicates plugin for resolving
+    duplicate_action: keep
     quiet_fallback: asis
     timid: no
     log: /config/beet.log
@@ -86,3 +81,18 @@ web:
     port: 8337
     readonly: false
 
+lyrics:
+    auto: no
+
+duplicates:
+    keys:
+        - mb_trackid
+        - mb_albumid
+        - title
+        - album
+    tag: dup=1
+
+subsonic:
+    url: http://{{ user_navidrome }}:4533/{{ user_navidrome }}
+    user: {{ username }}
+    pass: {{ password }}
