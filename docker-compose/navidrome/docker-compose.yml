@@ -4,8 +4,9 @@ services:
     image: deluan/navidrome:0.60.3
     restart: unless-stopped
     container_name: "${NAME}"
-    group_add:
-      - "20"
+    user: "501:20"
+    #group_add:
+    #  - "20"
     ports:
       - "${SUBBOXPORT}:4533"
     environment:
@@ -15,17 +16,12 @@ services:
       ND_ENABLEINSIGHTSCOLLECTOR: false
       ND_SUBSONIC_DEFAULTREPORTREALPATH: true
       ND_COVERARTPRIORITY: "embedded"
+      ND_MUSICFOLDER: "/music/${SUBBOXUSERNAME}"
+      ND_DATAFOLDER: "/users/${SUBBOXUSERNAME}/data"
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
     volumes:
-      - "/Users/lukepurnell/workspace/subbox/private/${SUBBOXUSERNAME}/navidrome/data:/data"
-      - type: volume
-        source: private-music
-        target: /music/private
-        read_only: true
-        volume:
-          nocopy: true
-          subpath: ${SUBBOXUSERNAME}
-      #- "public-music:/music/public:ro"
+      - "/Users/lukepurnell/workspace/subbox/users:/users"
+      - "private-music:/music:ro"
     networks:
       #- traefik_default
       - proxy
