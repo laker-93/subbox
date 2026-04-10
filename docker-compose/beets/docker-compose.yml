@@ -4,13 +4,13 @@ services:
   beets:
     image: lscr.io/linuxserver/beets:latest
     container_name: ${NAME}
-    user: "1000:1000"
+    user: "501:20"
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=501
+      - PGID=20
       - TZ=Etc/UTC
     volumes:
-      - /home/deploy/subbox/users/${SUBBOXUSERNAME}/beets/config:/config
+      - /Users/lajp/subbox/users/${SUBBOXUSERNAME}/beets/config:/config
       - type: volume
         source: private-music
         target: /music

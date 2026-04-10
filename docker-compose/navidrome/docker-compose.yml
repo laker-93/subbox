@@ -4,17 +4,17 @@ services:
     image: deluan/navidrome:0.60.3
     restart: unless-stopped
     container_name: "${NAME}"
-    user: "1000:1000"
+    user: "501:20"
     ports:
       - "${SUBBOXPORT}:4533"
     environment:
-      #ND_SCANSCHEDULE: 1
+      ND_SCANSCHEDULE: 0
       ND_LOGLEVEL: debug
       ND_SESSIONTIMEOUT: 24h
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       #ND_BASEURL: /navidrome
     volumes:
-      - "/home/deploy/subbox/users/${SUBBOXUSERNAME}/navidrome/data:/data"
+      - "/Users/lajp/subbox/users/${SUBBOXUSERNAME}/navidrome/data:/data"
       - type: volume
         source: private-music
         target: /music/private
@@ -27,7 +27,7 @@ services:
       - traefik_default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${NAME}.rule=Host(`${NAME}.sub-box.net`)"
+      - "traefik.http.routers.${NAME}.rule=Host(`${NAME}.staging.sub-box.net`)"
       - "traefik.http.services.${NAME}.loadbalancer.server.port=4533"
       - "traefik.http.routers.${NAME}.entrypoints=websecure"
       - "traefik.http.routers.${NAME}.tls.certresolver=le"
