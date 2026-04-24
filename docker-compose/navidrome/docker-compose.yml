@@ -11,20 +11,17 @@ services:
       #ND_SCANSCHEDULE: 1
       ND_LOGLEVEL: debug
       ND_SESSIONTIMEOUT: 24h
+      ND_SUBSONIC_DEFAULTREPORTREALPATH: true
       # must add this so navidrome can respond to the path navidrome is to be accessed on via traefik
       #ND_BASEURL: /navidrome
+      ND_MUSICFOLDER: "/music/${SUBBOXUSERNAME}"
+      ND_DATAFOLDER: "/users/${SUBBOXUSERNAME}/navidrome/data"
+      ND_CONFIGFILE: "/users/${SUBBOXUSERNAME}/navidrome/data/navidrome.toml"
     volumes:
-      - "/home/deploy/subbox/users/${SUBBOXUSERNAME}/navidrome/data:/data"
-      - type: volume
-        source: private-music
-        target: /music/private
-        read_only: true
-        volume:
-          nocopy: true
-          subpath: ${SUBBOXUSERNAME}
-            #- "public-music:/music/public:ro"
+      - "/home/deploy/subbox/users:/users"
+      - "private-music:/music:ro"
     networks:
-      - traefik_default
+      - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${NAME}.rule=Host(`${NAME}.sub-box.net`)"
@@ -47,6 +44,6 @@ volumes:
 
 
 networks:
-  traefik_default:
+  traefik:
     external: true
-    name: traefik_default
+    name: traefik

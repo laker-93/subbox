@@ -1,5 +1,3 @@
----
-version: "3"
 services:
   beets:
     image: lscr.io/linuxserver/beets:latest
@@ -27,11 +25,12 @@ services:
       - ${SUBBOXPORT}:8337
     restart: unless-stopped
     networks:
-      - traefik_default
+      - traefik
+
 networks:
-  traefik_default:
+  traefik:
     external: true
-    name: traefik_default
+    name: traefik
 
 volumes:
   private-staged:
