@@ -1,6 +1,6 @@
 services:
   beets:
-    image: lscr.io/linuxserver/beets:latest
+    image: lscr.io/linuxserver/beets:2.13.1
     container_name: ${NAME}
     user: "1000:1000"
     environment:
