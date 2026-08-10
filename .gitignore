@@ -1,0 +1,17 @@
+# Claude Code local settings — never intended for this public repo
+.claude/
+
+# Secrets / credentials
+secrets/
+*.env
+.env*
+
+# Runtime data (bind-mounted into live containers, not source)
+users/
+public/
+private/
+docker-compose/filebrowser/config/
+docker-compose/filebrowser/data/
+
+# OS cruft
+.DS_Store
